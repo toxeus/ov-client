@@ -50,7 +50,6 @@ namespace OpenVASP.CSharpClient.Sessions
                     {
                         await _semaphore.WaitAsync();
                         var item = _bufferQueue.Dequeue();
-                        _semaphore.Release();
                         var handlers = _messageHandlerResolver.ResolveMessageHandlers(item.GetType());
 
                         foreach (var handler in handlers)
@@ -58,6 +57,7 @@ namespace OpenVASP.CSharpClient.Sessions
                             await handler.HandleMessageAsync(item, cancellationToken);
                         }
 
+                        _semaphore.Release();
                     }
 
                     _manual.WaitOne();
