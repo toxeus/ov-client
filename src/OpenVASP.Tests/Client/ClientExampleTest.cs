@@ -32,7 +32,7 @@ namespace OpenVASP.Tests.Client
         public ClientExampleTest(ITestOutputHelper testOutputHelper)
         {
             var all = Environment.GetEnvironmentVariables();
-            string whisperRpcUrl = Environment.GetEnvironmentVariable("WHISPER_RPC_URL");
+            string whisperRpcUrl = Environment.GetEnvironmentVariable( "WHISPER_RPC_URL");
             string ethereumRpcUrl = Environment.GetEnvironmentVariable("ETHEREUM_RPC_URL");
 
             this._fakeEnsProvider = new FakeEnsProvider();

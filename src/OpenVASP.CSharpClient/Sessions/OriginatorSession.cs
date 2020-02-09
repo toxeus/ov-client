@@ -67,7 +67,10 @@ namespace OpenVASP.CSharpClient.Sessions
             _messageHandlerResolverBuilder.AddHandler(typeof(TransferReplyMessage),
                 new TransferReplyMessageHandler((transferReplyMessage, token) =>
                 {
-                    _transferReplyCompletionSource.TrySetResult(transferReplyMessage);
+                    if (_transferReplyCompletionSource.Task.Status == TaskStatus.WaitingForActivation)
+                    {
+                        _transferReplyCompletionSource.TrySetResult(transferReplyMessage);
+                    }
 
                     return Task.CompletedTask;
                 }));
@@ -75,7 +78,10 @@ namespace OpenVASP.CSharpClient.Sessions
             _messageHandlerResolverBuilder.AddHandler(typeof(TransferConfirmationMessage),
                 new TransferConfirmationMessageHandler((transferDispatchMessage, token) =>
                 {
-                    _transferConfirmationCompletionSource.TrySetResult(transferDispatchMessage);
+                    if (_transferConfirmationCompletionSource.Task.Status == TaskStatus.WaitingForActivation)
+                    {
+                        _transferConfirmationCompletionSource.TrySetResult(transferDispatchMessage);
+                    }
 
                     return Task.CompletedTask;
                 }));

@@ -7,6 +7,7 @@ using OpenVASP.CSharpClient;
 using OpenVASP.CSharpClient.Delegates;
 using OpenVASP.CSharpClient.Events;
 using OpenVASP.CSharpClient.Interfaces;
+using OpenVASP.CSharpClient.Sessions;
 using OpenVASP.CSharpClient.Utils;
 using OpenVASP.Messaging;
 using OpenVASP.Messaging.Messages;
@@ -18,7 +19,6 @@ namespace OpenVASP.Tests.Client.Sessions
     public abstract class VaspSession : IDisposable
     {
         // ReSharper disable once NotAccessedField.Global
-        protected Task _task;
         protected readonly IWhisperRpc _whisperRpc;
         protected readonly CancellationTokenSource _cancellationTokenSource;
         protected readonly string _sessionTopic;
@@ -28,14 +28,17 @@ namespace OpenVASP.Tests.Client.Sessions
         protected readonly MessageHandlerResolverBuilder _messageHandlerResolverBuilder;
         protected readonly VaspInformation _vaspInfo;
         protected readonly VaspContractInfo _vaspContractInfo;
+        protected readonly ITransportClient _transportClient;
+        protected readonly ISignService _signService;
 
         private readonly object _lock = new object();
 
         protected bool _hasReceivedTerminationMessage = false;
-        private bool _isActivated;
         protected string _sharedSymKeyId;
-        protected readonly ITransportClient _transportClient;
-        protected readonly ISignService _signService;
+        protected Task _task;
+
+        private bool _isActivated;
+        private ProducerConsumerQueue _producerConsumerQueue;
 
         public event SessionTermination OnSessionTermination;
 
@@ -87,6 +90,7 @@ namespace OpenVASP.Tests.Client.Sessions
                         _sharedSymKeyId = await _whisperRpc.RegisterSymKeyAsync(_sharedKey);
                         string messageFilter = await _whisperRpc.CreateMessageFilterAsync(topicHex: _sessionTopic, symKeyId: _sharedSymKeyId);
                         var messageHandlerResolver = _messageHandlerResolverBuilder.Build();
+                        this._producerConsumerQueue = new ProducerConsumerQueue(messageHandlerResolver, cancellationToken);
 
                         do
                         {
@@ -95,25 +99,14 @@ namespace OpenVASP.Tests.Client.Sessions
                             if (messages != null &&
                                 messages.Count != 0)
                             {
-                                List<Task> currentlyProcessing = new List<Task>(messages.Count);
-
                                 foreach (var message in messages)
                                 {
                                     if (!_signService.VerifySign(message.Payload, message.Signature,
                                         _counterPartyPubSigningKey))
                                         continue;
 
-                                    var handlers = messageHandlerResolver.ResolveMessageHandlers(message.Message.GetType());
-
-                                    if (handlers == null || handlers.Length == 0)
-                                        continue;
-
-                                    var tasks = handlers.Select(handler =>
-                                        handler.HandleMessageAsync(message.Message, cancellationToken));
-                                    currentlyProcessing.AddRange(tasks);
+                                    _producerConsumerQueue.Enqueue(message.Message);
                                 }
-
-                                Task.WaitAll(currentlyProcessing.ToArray(), cancellationToken);
 
                                 continue;
                             }
@@ -175,6 +168,7 @@ namespace OpenVASP.Tests.Client.Sessions
             }
 
             _task?.Dispose();
+            _producerConsumerQueue?.Dispose();
             _cancellationTokenSource?.Dispose();
         }
 
