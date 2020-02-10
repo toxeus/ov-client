@@ -7,13 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0332FC30
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVASP.Messaging", "OpenVASP.Messaging\OpenVASP.Messaging.csproj", "{718CC671-03BA-4B34-8BE0-E1D8B62EE782}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVASP.ProtoMappers", "OpenVASP.Whisper\OpenVASP.ProtoMappers.csproj", "{F21DD4E1-3CC9-48FF-A398-F8BED372B06B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVASP.Tests", "OpenVASP.Tests\OpenVASP.Tests.csproj", "{0D693601-5AD3-4F85-8A52-23BDAC3F19A5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVASP.ProtocolMessages", "OpenVASP.ProtocolMessages\OpenVASP.ProtocolMessages.csproj", "{5AE61C71-5185-447E-9B99-E6C0D174C0AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVASP.CSharpClient", "OpenVASP.CSharpClient\OpenVASP.CSharpClient.csproj", "{C8CDB050-F97D-49AE-AADD-EB26E2F7ED75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenVASP.ProtoMappers", "OpenVASP.ProtoMappers\OpenVASP.ProtoMappers.csproj", "{ADE833EB-9798-4720-AD91-5E5B65EAECD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,6 @@ Global
 		{718CC671-03BA-4B34-8BE0-E1D8B62EE782}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{718CC671-03BA-4B34-8BE0-E1D8B62EE782}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{718CC671-03BA-4B34-8BE0-E1D8B62EE782}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F21DD4E1-3CC9-48FF-A398-F8BED372B06B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F21DD4E1-3CC9-48FF-A398-F8BED372B06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F21DD4E1-3CC9-48FF-A398-F8BED372B06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F21DD4E1-3CC9-48FF-A398-F8BED372B06B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0D693601-5AD3-4F85-8A52-23BDAC3F19A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0D693601-5AD3-4F85-8A52-23BDAC3F19A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D693601-5AD3-4F85-8A52-23BDAC3F19A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,6 +37,10 @@ Global
 		{C8CDB050-F97D-49AE-AADD-EB26E2F7ED75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8CDB050-F97D-49AE-AADD-EB26E2F7ED75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8CDB050-F97D-49AE-AADD-EB26E2F7ED75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADE833EB-9798-4720-AD91-5E5B65EAECD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADE833EB-9798-4720-AD91-5E5B65EAECD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADE833EB-9798-4720-AD91-5E5B65EAECD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADE833EB-9798-4720-AD91-5E5B65EAECD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
