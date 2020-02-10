@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenVASP.Messaging\OpenVASP.Messaging.csproj" />
+    <ProjectReference Include="..\OpenVASP.ProtocolMessages\OpenVASP.ProtocolMessages.csproj" />
+    <ProjectReference Include="..\OpenVASP.Whisper\OpenVASP.ProtoMappers.csproj" />
   </ItemGroup>
 
 </Project>
