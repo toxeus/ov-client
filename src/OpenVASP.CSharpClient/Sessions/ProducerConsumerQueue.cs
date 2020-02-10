@@ -45,22 +45,32 @@ namespace OpenVASP.CSharpClient.Sessions
             {
                 do
                 {
+                    _manual.WaitOne();
 
                     while (_bufferQueue.Any())
                     {
-                        await _semaphore.WaitAsync();
-                        var item = _bufferQueue.Dequeue();
-                        var handlers = _messageHandlerResolver.ResolveMessageHandlers(item.GetType());
-
-                        foreach (var handler in handlers)
+                        try
                         {
-                            await handler.HandleMessageAsync(item, cancellationToken);
-                        }
+                            await _semaphore.WaitAsync();
+                            var item = _bufferQueue.Dequeue();
+                            var handlers = _messageHandlerResolver.ResolveMessageHandlers(item.GetType());
 
-                        _semaphore.Release();
+                            foreach (var handler in handlers)
+                            {
+                                await handler.HandleMessageAsync(item, cancellationToken);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            //TODO: Add logging here
+                            throw;
+                        }
+                        finally
+                        {
+                            _semaphore.Release();
+                        }
                     }
 
-                    _manual.WaitOne();
                 } while (!cancellationToken.IsCancellationRequested);
 
             }, cancellationToken, TaskCreationOptions.LongRunning);
@@ -77,6 +87,8 @@ namespace OpenVASP.CSharpClient.Sessions
             }
             catch
             {
+                //TODO: process exception
+                // ignored
             }
 
             _semaphore?.Dispose();
