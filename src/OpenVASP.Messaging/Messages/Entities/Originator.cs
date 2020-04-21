@@ -1,4 +1,6 @@
-﻿namespace OpenVASP.Messaging.Messages.Entities
+﻿using Newtonsoft.Json;
+
+namespace OpenVASP.Messaging.Messages.Entities
 {
     public class Originator
     {
@@ -14,29 +16,36 @@
             Name = name;
             VAAN = vaan;
             PostalAddress = postalAddress;
-            PlaceOfBirth = placeOfBirth ?? default;
-            NaturalPersonId = naturalPersonId ?? new NaturalPersonId[] {};
-            JuridicalPersonId = juridicalPersonId ?? new JuridicalPersonId[] {};
-            BIC = bic ?? string.Empty;
+            PlaceOfBirth = placeOfBirth;
+            NaturalPersonId = naturalPersonId;
+            JuridicalPersonId = juridicalPersonId;
+            BIC = bic;
         }
 
+        [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("vaan")]
         public string VAAN { get; set; }
 
+        [JsonProperty("address")]
         public PostalAddress PostalAddress { get; set; }
 
+        [JsonProperty("birth", NullValueHandling=NullValueHandling.Ignore)]
         public PlaceOfBirth PlaceOfBirth { get; set; }
 
+        [JsonProperty("nat", NullValueHandling=NullValueHandling.Ignore)]
         public NaturalPersonId[] NaturalPersonId { get; set; }
 
+        [JsonProperty("jur", NullValueHandling=NullValueHandling.Ignore)]
         public JuridicalPersonId[] JuridicalPersonId { get; set; }
 
+        [JsonProperty("bic", NullValueHandling=NullValueHandling.Ignore)]
         public string BIC { get; set; }
 
         public static Originator CreateOriginatorForNaturalPerson(
             string originatorName, 
-            VirtualAssetssAccountNumber vaan,
+            VirtualAssetsAccountNumber vaan,
             PostalAddress postalAddress,
             PlaceOfBirth placeOfBirth,
             NaturalPersonId[] naturalPersonIds)

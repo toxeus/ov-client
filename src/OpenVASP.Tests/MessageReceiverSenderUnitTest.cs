@@ -7,7 +7,6 @@ using OpenVASP.CSharpClient;
 using OpenVASP.Messaging;
 using OpenVASP.Messaging.Messages;
 using OpenVASP.Messaging.Messages.Entities;
-using OpenVASP.ProtoMappers;
 using Xunit;
 using Transaction = OpenVASP.Messaging.Messages.Entities.Transaction;
 
@@ -110,30 +109,30 @@ namespace OpenVASP.Tests
             Assert.Equal(request.Comment, response.Comment);
 
             Assert.Equal(request.Message.SessionId, response.Message.SessionId);
-            Assert.Equal(request.MessageType, response.MessageType);
+            Assert.Equal(request.Message.MessageType, response.Message.MessageType);
             Assert.Equal(request.Message.MessageCode, response.Message.MessageCode);
             Assert.Equal(request.Message.MessageId, response.Message.MessageId);
 
-            AssertPlaceOfBirth(request.VASP.PlaceOfBirth, response.VASP.PlaceOfBirth);
+            AssertPlaceOfBirth(request.Vasp.PlaceOfBirth, response.Vasp.PlaceOfBirth);
 
-            Assert.Equal(request.VASP.BIC, response.VASP.BIC);
-            Assert.Equal(request.VASP.Name, response.VASP.Name);
-            Assert.Equal(request.VASP.VaspPublickKey, response.VASP.VaspPublickKey);
-            Assert.Equal(request.VASP.VaspIdentity, response.VASP.VaspIdentity);
+            Assert.Equal(request.Vasp.BIC, response.Vasp.BIC);
+            Assert.Equal(request.Vasp.Name, response.Vasp.Name);
+            Assert.Equal(request.Vasp.VaspPublickKey, response.Vasp.VaspPublickKey);
+            Assert.Equal(request.Vasp.VaspIdentity, response.Vasp.VaspIdentity);
 
-            Assert.Equal(request.VASP.PostalAddress.StreetName, response.VASP.PostalAddress.StreetName);
-            Assert.Equal(request.VASP.PostalAddress.AddressLine, response.VASP.PostalAddress.AddressLine);
-            Assert.Equal(request.VASP.PostalAddress.BuildingNumber, response.VASP.PostalAddress.BuildingNumber);
-            Assert.Equal(request.VASP.PostalAddress.Country, response.VASP.PostalAddress.Country);
-            Assert.Equal(request.VASP.PostalAddress.PostCode, response.VASP.PostalAddress.PostCode);
+            Assert.Equal(request.Vasp.PostalAddress.StreetName, response.Vasp.PostalAddress.StreetName);
+            Assert.Equal(request.Vasp.PostalAddress.AddressLine, response.Vasp.PostalAddress.AddressLine);
+            Assert.Equal(request.Vasp.PostalAddress.BuildingNumber, response.Vasp.PostalAddress.BuildingNumber);
+            Assert.Equal(request.Vasp.PostalAddress.Country, response.Vasp.PostalAddress.Country);
+            Assert.Equal(request.Vasp.PostalAddress.PostCode, response.Vasp.PostalAddress.PostCode);
 
-            Assert.Equal(request.VASP.JuridicalPersonIds.Count(), response.VASP.JuridicalPersonIds.Count());
+            Assert.Equal(request.Vasp.JuridicalPersonIds.Count(), response.Vasp.JuridicalPersonIds.Count());
 
-            AssertJuridicalPersonIds(request.VASP.JuridicalPersonIds, response.VASP.JuridicalPersonIds);
+            AssertJuridicalPersonIds(request.Vasp.JuridicalPersonIds, response.Vasp.JuridicalPersonIds);
 
-            Assert.Equal(request.VASP.NaturalPersonIds.Count(), response.VASP.NaturalPersonIds.Count());
+            Assert.Equal(request.Vasp.NaturalPersonIds.Count(), response.Vasp.NaturalPersonIds.Count());
 
-            AssertNaturalPersonIds(request.VASP.NaturalPersonIds, response.VASP.NaturalPersonIds);
+            AssertNaturalPersonIds(request.Vasp.NaturalPersonIds, response.Vasp.NaturalPersonIds);
         }
 
         private void AssertTransferDispatch(TransferDispatchMessage response, TransferDispatchMessage request)
@@ -143,30 +142,30 @@ namespace OpenVASP.Tests
             Assert.Equal(request.Comment, response.Comment);
 
             Assert.Equal(request.Message.SessionId, response.Message.SessionId);
-            Assert.Equal(request.MessageType, response.MessageType);
+            Assert.Equal(request.Message.MessageType, response.Message.MessageType);
             Assert.Equal(request.Message.MessageCode, response.Message.MessageCode);
             Assert.Equal(request.Message.MessageId, response.Message.MessageId);
 
-            AssertPlaceOfBirth(request.VASP.PlaceOfBirth, response.VASP.PlaceOfBirth);
+            AssertPlaceOfBirth(request.Vasp.PlaceOfBirth, response.Vasp.PlaceOfBirth);
 
-            Assert.Equal(request.VASP.BIC, response.VASP.BIC);
-            Assert.Equal(request.VASP.Name, response.VASP.Name);
-            Assert.Equal(request.VASP.VaspPublickKey, response.VASP.VaspPublickKey);
-            Assert.Equal(request.VASP.VaspIdentity, response.VASP.VaspIdentity);
+            Assert.Equal(request.Vasp.BIC, response.Vasp.BIC);
+            Assert.Equal(request.Vasp.Name, response.Vasp.Name);
+            Assert.Equal(request.Vasp.VaspPublickKey, response.Vasp.VaspPublickKey);
+            Assert.Equal(request.Vasp.VaspIdentity, response.Vasp.VaspIdentity);
 
-            Assert.Equal(request.VASP.PostalAddress.StreetName, response.VASP.PostalAddress.StreetName);
-            Assert.Equal(request.VASP.PostalAddress.AddressLine, response.VASP.PostalAddress.AddressLine);
-            Assert.Equal(request.VASP.PostalAddress.BuildingNumber, response.VASP.PostalAddress.BuildingNumber);
-            Assert.Equal(request.VASP.PostalAddress.Country, response.VASP.PostalAddress.Country);
-            Assert.Equal(request.VASP.PostalAddress.PostCode, response.VASP.PostalAddress.PostCode);
+            Assert.Equal(request.Vasp.PostalAddress.StreetName, response.Vasp.PostalAddress.StreetName);
+            Assert.Equal(request.Vasp.PostalAddress.AddressLine, response.Vasp.PostalAddress.AddressLine);
+            Assert.Equal(request.Vasp.PostalAddress.BuildingNumber, response.Vasp.PostalAddress.BuildingNumber);
+            Assert.Equal(request.Vasp.PostalAddress.Country, response.Vasp.PostalAddress.Country);
+            Assert.Equal(request.Vasp.PostalAddress.PostCode, response.Vasp.PostalAddress.PostCode);
 
-            Assert.Equal(request.VASP.JuridicalPersonIds.Count(), response.VASP.JuridicalPersonIds.Count());
+            Assert.Equal(request.Vasp.JuridicalPersonIds.Count(), response.Vasp.JuridicalPersonIds.Count());
 
-            AssertJuridicalPersonIds(request.VASP.JuridicalPersonIds, response.VASP.JuridicalPersonIds);
+            AssertJuridicalPersonIds(request.Vasp.JuridicalPersonIds, response.Vasp.JuridicalPersonIds);
 
-            Assert.Equal(request.VASP.NaturalPersonIds.Count(), response.VASP.NaturalPersonIds.Count());
+            Assert.Equal(request.Vasp.NaturalPersonIds.Count(), response.Vasp.NaturalPersonIds.Count());
 
-            AssertNaturalPersonIds(request.VASP.NaturalPersonIds, response.VASP.NaturalPersonIds);
+            AssertNaturalPersonIds(request.Vasp.NaturalPersonIds, response.Vasp.NaturalPersonIds);
 
             Assert.Equal(request.Transfer.TransferType, response.Transfer.TransferType);
             Assert.Equal(request.Transfer.VirtualAssetType, response.Transfer.VirtualAssetType);
@@ -187,30 +186,30 @@ namespace OpenVASP.Tests
             Assert.Equal(request.Comment, response.Comment);
 
             Assert.Equal(request.Message.SessionId, response.Message.SessionId);
-            Assert.Equal(request.MessageType, response.MessageType);
+            Assert.Equal(request.Message.MessageType, response.Message.MessageType);
             Assert.Equal(request.Message.MessageCode, response.Message.MessageCode);
             Assert.Equal(request.Message.MessageId, response.Message.MessageId);
 
-            AssertPlaceOfBirth(request.VASP.PlaceOfBirth, response.VASP.PlaceOfBirth);
+            AssertPlaceOfBirth(request.Vasp.PlaceOfBirth, response.Vasp.PlaceOfBirth);
 
-            Assert.Equal(request.VASP.BIC, response.VASP.BIC);
-            Assert.Equal(request.VASP.Name, response.VASP.Name);
-            Assert.Equal(request.VASP.VaspPublickKey, response.VASP.VaspPublickKey);
-            Assert.Equal(request.VASP.VaspIdentity, response.VASP.VaspIdentity);
+            Assert.Equal(request.Vasp.BIC, response.Vasp.BIC);
+            Assert.Equal(request.Vasp.Name, response.Vasp.Name);
+            Assert.Equal(request.Vasp.VaspPublickKey, response.Vasp.VaspPublickKey);
+            Assert.Equal(request.Vasp.VaspIdentity, response.Vasp.VaspIdentity);
 
-            Assert.Equal(request.VASP.PostalAddress.StreetName, response.VASP.PostalAddress.StreetName);
-            Assert.Equal(request.VASP.PostalAddress.AddressLine, response.VASP.PostalAddress.AddressLine);
-            Assert.Equal(request.VASP.PostalAddress.BuildingNumber, response.VASP.PostalAddress.BuildingNumber);
-            Assert.Equal(request.VASP.PostalAddress.Country, response.VASP.PostalAddress.Country);
-            Assert.Equal(request.VASP.PostalAddress.PostCode, response.VASP.PostalAddress.PostCode);
+            Assert.Equal(request.Vasp.PostalAddress.StreetName, response.Vasp.PostalAddress.StreetName);
+            Assert.Equal(request.Vasp.PostalAddress.AddressLine, response.Vasp.PostalAddress.AddressLine);
+            Assert.Equal(request.Vasp.PostalAddress.BuildingNumber, response.Vasp.PostalAddress.BuildingNumber);
+            Assert.Equal(request.Vasp.PostalAddress.Country, response.Vasp.PostalAddress.Country);
+            Assert.Equal(request.Vasp.PostalAddress.PostCode, response.Vasp.PostalAddress.PostCode);
 
-            Assert.Equal(request.VASP.JuridicalPersonIds.Count(), response.VASP.JuridicalPersonIds.Count());
+            Assert.Equal(request.Vasp.JuridicalPersonIds.Count(), response.Vasp.JuridicalPersonIds.Count());
 
-            AssertJuridicalPersonIds(request.VASP.JuridicalPersonIds, response.VASP.JuridicalPersonIds);
+            AssertJuridicalPersonIds(request.Vasp.JuridicalPersonIds, response.Vasp.JuridicalPersonIds);
 
-            Assert.Equal(request.VASP.NaturalPersonIds.Count(), response.VASP.NaturalPersonIds.Count());
+            Assert.Equal(request.Vasp.NaturalPersonIds.Count(), response.Vasp.NaturalPersonIds.Count());
 
-            AssertNaturalPersonIds(request.VASP.NaturalPersonIds, response.VASP.NaturalPersonIds);
+            AssertNaturalPersonIds(request.Vasp.NaturalPersonIds, response.Vasp.NaturalPersonIds);
 
             Assert.Equal(request.Transfer.TransferType, response.Transfer.TransferType);
             Assert.Equal(request.Transfer.VirtualAssetType, response.Transfer.VirtualAssetType);
@@ -244,32 +243,32 @@ namespace OpenVASP.Tests
             Assert.Equal(request.Comment, response.Comment);
 
             Assert.Equal(request.Message.SessionId, response.Message.SessionId);
-            Assert.Equal(request.MessageType, response.MessageType);
+            Assert.Equal(request.Message.MessageType, response.Message.MessageType);
             Assert.Equal(request.Message.MessageCode, response.Message.MessageCode);
             Assert.Equal(request.Message.MessageId, response.Message.MessageId);
 
-            Assert.Equal(request.VASP.PlaceOfBirth.DateOfBirth.Date, response.VASP.PlaceOfBirth.DateOfBirth.Date);
-            Assert.Equal(request.VASP.PlaceOfBirth.CountryOfBirth, response.VASP.PlaceOfBirth.CountryOfBirth);
-            Assert.Equal(request.VASP.PlaceOfBirth.CityOfBirth, response.VASP.PlaceOfBirth.CityOfBirth);
+            Assert.Equal(request.Vasp.PlaceOfBirth.DateOfBirth.Date, response.Vasp.PlaceOfBirth.DateOfBirth.Date);
+            Assert.Equal(request.Vasp.PlaceOfBirth.CountryOfBirth, response.Vasp.PlaceOfBirth.CountryOfBirth);
+            Assert.Equal(request.Vasp.PlaceOfBirth.CityOfBirth, response.Vasp.PlaceOfBirth.CityOfBirth);
 
-            Assert.Equal(request.VASP.BIC, response.VASP.BIC);
-            Assert.Equal(request.VASP.Name, response.VASP.Name);
-            Assert.Equal(request.VASP.VaspPublickKey, response.VASP.VaspPublickKey);
-            Assert.Equal(request.VASP.VaspIdentity, response.VASP.VaspIdentity);
+            Assert.Equal(request.Vasp.BIC, response.Vasp.BIC);
+            Assert.Equal(request.Vasp.Name, response.Vasp.Name);
+            Assert.Equal(request.Vasp.VaspPublickKey, response.Vasp.VaspPublickKey);
+            Assert.Equal(request.Vasp.VaspIdentity, response.Vasp.VaspIdentity);
 
-            Assert.Equal(request.VASP.PostalAddress.StreetName, response.VASP.PostalAddress.StreetName);
-            Assert.Equal(request.VASP.PostalAddress.AddressLine, response.VASP.PostalAddress.AddressLine);
-            Assert.Equal(request.VASP.PostalAddress.BuildingNumber, response.VASP.PostalAddress.BuildingNumber);
-            Assert.Equal(request.VASP.PostalAddress.Country, response.VASP.PostalAddress.Country);
-            Assert.Equal(request.VASP.PostalAddress.PostCode, response.VASP.PostalAddress.PostCode);
+            Assert.Equal(request.Vasp.PostalAddress.StreetName, response.Vasp.PostalAddress.StreetName);
+            Assert.Equal(request.Vasp.PostalAddress.AddressLine, response.Vasp.PostalAddress.AddressLine);
+            Assert.Equal(request.Vasp.PostalAddress.BuildingNumber, response.Vasp.PostalAddress.BuildingNumber);
+            Assert.Equal(request.Vasp.PostalAddress.Country, response.Vasp.PostalAddress.Country);
+            Assert.Equal(request.Vasp.PostalAddress.PostCode, response.Vasp.PostalAddress.PostCode);
 
-            Assert.Equal(request.VASP.JuridicalPersonIds.Count(), response.VASP.JuridicalPersonIds.Count());
+            Assert.Equal(request.Vasp.JuridicalPersonIds.Count(), response.Vasp.JuridicalPersonIds.Count());
 
-            AssertJuridicalPersonIds(request.VASP.JuridicalPersonIds, response.VASP.JuridicalPersonIds);
+            AssertJuridicalPersonIds(request.Vasp.JuridicalPersonIds, response.Vasp.JuridicalPersonIds);
 
-            Assert.Equal(request.VASP.NaturalPersonIds.Count(), response.VASP.NaturalPersonIds.Count());
+            Assert.Equal(request.Vasp.NaturalPersonIds.Count(), response.Vasp.NaturalPersonIds.Count());
 
-            AssertNaturalPersonIds(request.VASP.NaturalPersonIds, response.VASP.NaturalPersonIds);
+            AssertNaturalPersonIds(request.Vasp.NaturalPersonIds, response.Vasp.NaturalPersonIds);
         }
 
         private static void AssertSessionReply(SessionReplyMessage response, SessionReplyMessage request)
@@ -281,32 +280,32 @@ namespace OpenVASP.Tests
             Assert.Equal(request.Comment, response.Comment);
 
             Assert.Equal(request.Message.SessionId, response.Message.SessionId);
-            Assert.Equal(request.MessageType, response.MessageType);
+            Assert.Equal(request.Message.MessageType, response.Message.MessageType);
             Assert.Equal(request.Message.MessageCode, response.Message.MessageCode);
             Assert.Equal(request.Message.MessageId, response.Message.MessageId);
 
-            Assert.Equal(request.VASP.PlaceOfBirth.DateOfBirth.Date, response.VASP.PlaceOfBirth.DateOfBirth.Date);
-            Assert.Equal(request.VASP.PlaceOfBirth.CountryOfBirth, response.VASP.PlaceOfBirth.CountryOfBirth);
-            Assert.Equal(request.VASP.PlaceOfBirth.CityOfBirth, response.VASP.PlaceOfBirth.CityOfBirth);
+            Assert.Equal(request.Vasp.PlaceOfBirth.DateOfBirth.Date, response.Vasp.PlaceOfBirth.DateOfBirth.Date);
+            Assert.Equal(request.Vasp.PlaceOfBirth.CountryOfBirth, response.Vasp.PlaceOfBirth.CountryOfBirth);
+            Assert.Equal(request.Vasp.PlaceOfBirth.CityOfBirth, response.Vasp.PlaceOfBirth.CityOfBirth);
 
-            Assert.Equal(request.VASP.BIC, response.VASP.BIC);
-            Assert.Equal(request.VASP.Name, response.VASP.Name);
-            Assert.Equal(request.VASP.VaspPublickKey, response.VASP.VaspPublickKey);
-            Assert.Equal(request.VASP.VaspIdentity, response.VASP.VaspIdentity);
+            Assert.Equal(request.Vasp.BIC, response.Vasp.BIC);
+            Assert.Equal(request.Vasp.Name, response.Vasp.Name);
+            Assert.Equal(request.Vasp.VaspPublickKey, response.Vasp.VaspPublickKey);
+            Assert.Equal(request.Vasp.VaspIdentity, response.Vasp.VaspIdentity);
 
-            Assert.Equal(request.VASP.PostalAddress.StreetName, response.VASP.PostalAddress.StreetName);
-            Assert.Equal(request.VASP.PostalAddress.AddressLine, response.VASP.PostalAddress.AddressLine);
-            Assert.Equal(request.VASP.PostalAddress.BuildingNumber, response.VASP.PostalAddress.BuildingNumber);
-            Assert.Equal(request.VASP.PostalAddress.Country, response.VASP.PostalAddress.Country);
-            Assert.Equal(request.VASP.PostalAddress.PostCode, response.VASP.PostalAddress.PostCode);
+            Assert.Equal(request.Vasp.PostalAddress.StreetName, response.Vasp.PostalAddress.StreetName);
+            Assert.Equal(request.Vasp.PostalAddress.AddressLine, response.Vasp.PostalAddress.AddressLine);
+            Assert.Equal(request.Vasp.PostalAddress.BuildingNumber, response.Vasp.PostalAddress.BuildingNumber);
+            Assert.Equal(request.Vasp.PostalAddress.Country, response.Vasp.PostalAddress.Country);
+            Assert.Equal(request.Vasp.PostalAddress.PostCode, response.Vasp.PostalAddress.PostCode);
 
-            Assert.Equal(request.VASP.JuridicalPersonIds.Count(), response.VASP.JuridicalPersonIds.Count());
+            Assert.Equal(request.Vasp.JuridicalPersonIds.Count(), response.Vasp.JuridicalPersonIds.Count());
 
-            AssertJuridicalPersonIds(request.VASP.JuridicalPersonIds, response.VASP.JuridicalPersonIds);
+            AssertJuridicalPersonIds(request.Vasp.JuridicalPersonIds, response.Vasp.JuridicalPersonIds);
 
-            Assert.Equal(request.VASP.NaturalPersonIds.Count(), response.VASP.NaturalPersonIds.Count());
+            Assert.Equal(request.Vasp.NaturalPersonIds.Count(), response.Vasp.NaturalPersonIds.Count());
 
-            AssertNaturalPersonIds(request.VASP.NaturalPersonIds, response.VASP.NaturalPersonIds);
+            AssertNaturalPersonIds(request.Vasp.NaturalPersonIds, response.Vasp.NaturalPersonIds);
         }
 
         private static void AssertTransferRequest(TransferRequestMessage response, TransferRequestMessage request)
@@ -316,30 +315,30 @@ namespace OpenVASP.Tests
             Assert.Equal(request.Comment, response.Comment);
 
             Assert.Equal(request.Message.SessionId, response.Message.SessionId);
-            Assert.Equal(request.MessageType, response.MessageType);
+            Assert.Equal(request.Message.MessageType, response.Message.MessageType);
             Assert.Equal(request.Message.MessageCode, response.Message.MessageCode);
             Assert.Equal(request.Message.MessageId, response.Message.MessageId);
 
-            AssertPlaceOfBirth(request.VASP.PlaceOfBirth, response.VASP.PlaceOfBirth);
+            AssertPlaceOfBirth(request.Vasp.PlaceOfBirth, response.Vasp.PlaceOfBirth);
 
-            Assert.Equal(request.VASP.BIC, response.VASP.BIC);
-            Assert.Equal(request.VASP.Name, response.VASP.Name);
-            Assert.Equal(request.VASP.VaspPublickKey, response.VASP.VaspPublickKey);
-            Assert.Equal(request.VASP.VaspIdentity, response.VASP.VaspIdentity);
+            Assert.Equal(request.Vasp.BIC, response.Vasp.BIC);
+            Assert.Equal(request.Vasp.Name, response.Vasp.Name);
+            Assert.Equal(request.Vasp.VaspPublickKey, response.Vasp.VaspPublickKey);
+            Assert.Equal(request.Vasp.VaspIdentity, response.Vasp.VaspIdentity);
 
-            Assert.Equal(request.VASP.PostalAddress.StreetName, response.VASP.PostalAddress.StreetName);
-            Assert.Equal(request.VASP.PostalAddress.AddressLine, response.VASP.PostalAddress.AddressLine);
-            Assert.Equal(request.VASP.PostalAddress.BuildingNumber, response.VASP.PostalAddress.BuildingNumber);
-            Assert.Equal(request.VASP.PostalAddress.Country, response.VASP.PostalAddress.Country);
-            Assert.Equal(request.VASP.PostalAddress.PostCode, response.VASP.PostalAddress.PostCode);
+            Assert.Equal(request.Vasp.PostalAddress.StreetName, response.Vasp.PostalAddress.StreetName);
+            Assert.Equal(request.Vasp.PostalAddress.AddressLine, response.Vasp.PostalAddress.AddressLine);
+            Assert.Equal(request.Vasp.PostalAddress.BuildingNumber, response.Vasp.PostalAddress.BuildingNumber);
+            Assert.Equal(request.Vasp.PostalAddress.Country, response.Vasp.PostalAddress.Country);
+            Assert.Equal(request.Vasp.PostalAddress.PostCode, response.Vasp.PostalAddress.PostCode);
 
-            Assert.Equal(request.VASP.JuridicalPersonIds.Count(), response.VASP.JuridicalPersonIds.Count());
+            Assert.Equal(request.Vasp.JuridicalPersonIds.Count(), response.Vasp.JuridicalPersonIds.Count());
 
-            AssertJuridicalPersonIds(request.VASP.JuridicalPersonIds, response.VASP.JuridicalPersonIds);
+            AssertJuridicalPersonIds(request.Vasp.JuridicalPersonIds, response.Vasp.JuridicalPersonIds);
 
-            Assert.Equal(request.VASP.NaturalPersonIds.Count(), response.VASP.NaturalPersonIds.Count());
+            Assert.Equal(request.Vasp.NaturalPersonIds.Count(), response.Vasp.NaturalPersonIds.Count());
 
-            AssertNaturalPersonIds(request.VASP.NaturalPersonIds, response.VASP.NaturalPersonIds);
+            AssertNaturalPersonIds(request.Vasp.NaturalPersonIds, response.Vasp.NaturalPersonIds);
 
             Assert.Equal(request.Transfer.TransferType, response.Transfer.TransferType);
             Assert.Equal(request.Transfer.VirtualAssetType, response.Transfer.VirtualAssetType);
@@ -357,30 +356,30 @@ namespace OpenVASP.Tests
             Assert.Equal(request.Comment, response.Comment);
 
             Assert.Equal(request.Message.SessionId, response.Message.SessionId);
-            Assert.Equal(request.MessageType, response.MessageType);
+            Assert.Equal(request.Message.MessageType, response.Message.MessageType);
             Assert.Equal(request.Message.MessageCode, response.Message.MessageCode);
             Assert.Equal(request.Message.MessageId, response.Message.MessageId);
 
-            AssertPlaceOfBirth(request.VASP.PlaceOfBirth, response.VASP.PlaceOfBirth);
+            AssertPlaceOfBirth(request.Vasp.PlaceOfBirth, response.Vasp.PlaceOfBirth);
 
-            Assert.Equal(request.VASP.BIC, response.VASP.BIC);
-            Assert.Equal(request.VASP.Name, response.VASP.Name);
-            Assert.Equal(request.VASP.VaspPublickKey, response.VASP.VaspPublickKey);
-            Assert.Equal(request.VASP.VaspIdentity, response.VASP.VaspIdentity);
+            Assert.Equal(request.Vasp.BIC, response.Vasp.BIC);
+            Assert.Equal(request.Vasp.Name, response.Vasp.Name);
+            Assert.Equal(request.Vasp.VaspPublickKey, response.Vasp.VaspPublickKey);
+            Assert.Equal(request.Vasp.VaspIdentity, response.Vasp.VaspIdentity);
 
-            Assert.Equal(request.VASP.PostalAddress.StreetName, response.VASP.PostalAddress.StreetName);
-            Assert.Equal(request.VASP.PostalAddress.AddressLine, response.VASP.PostalAddress.AddressLine);
-            Assert.Equal(request.VASP.PostalAddress.BuildingNumber, response.VASP.PostalAddress.BuildingNumber);
-            Assert.Equal(request.VASP.PostalAddress.Country, response.VASP.PostalAddress.Country);
-            Assert.Equal(request.VASP.PostalAddress.PostCode, response.VASP.PostalAddress.PostCode);
+            Assert.Equal(request.Vasp.PostalAddress.StreetName, response.Vasp.PostalAddress.StreetName);
+            Assert.Equal(request.Vasp.PostalAddress.AddressLine, response.Vasp.PostalAddress.AddressLine);
+            Assert.Equal(request.Vasp.PostalAddress.BuildingNumber, response.Vasp.PostalAddress.BuildingNumber);
+            Assert.Equal(request.Vasp.PostalAddress.Country, response.Vasp.PostalAddress.Country);
+            Assert.Equal(request.Vasp.PostalAddress.PostCode, response.Vasp.PostalAddress.PostCode);
 
-            Assert.Equal(request.VASP.JuridicalPersonIds.Count(), response.VASP.JuridicalPersonIds.Count());
+            Assert.Equal(request.Vasp.JuridicalPersonIds.Count(), response.Vasp.JuridicalPersonIds.Count());
 
-            AssertJuridicalPersonIds(request.VASP.JuridicalPersonIds, response.VASP.JuridicalPersonIds);
+            AssertJuridicalPersonIds(request.Vasp.JuridicalPersonIds, response.Vasp.JuridicalPersonIds);
 
-            Assert.Equal(request.VASP.NaturalPersonIds.Count(), response.VASP.NaturalPersonIds.Count());
+            Assert.Equal(request.Vasp.NaturalPersonIds.Count(), response.Vasp.NaturalPersonIds.Count());
 
-            AssertNaturalPersonIds(request.VASP.NaturalPersonIds, response.VASP.NaturalPersonIds);
+            AssertNaturalPersonIds(request.Vasp.NaturalPersonIds, response.Vasp.NaturalPersonIds);
 
             Assert.Equal(request.Transfer.TransferType, response.Transfer.TransferType);
             Assert.Equal(request.Transfer.VirtualAssetType, response.Transfer.VirtualAssetType);
@@ -468,7 +467,7 @@ namespace OpenVASP.Tests
             var message = new Message(
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
-                "1");
+                "1", MessageType.SessionRequest);
             var handshake = new HandShakeRequest(topic, ecdhPubKey);
             var postalAddress = new PostalAddress(
                 "TestingStreet",
@@ -497,10 +496,9 @@ namespace OpenVASP.Tests
                 },
                 "DEUTDEFF");
 
-            var request = new SessionRequestMessage(message, handshake, vaspInformation)
-            {
-                Comment = "This is test message",
-            };
+            var request = SessionRequestMessage.Create(message, handshake, vaspInformation);
+            request.Comment = "This is test message";
+            
             return request;
         }
 
@@ -515,7 +513,7 @@ namespace OpenVASP.Tests
             var message = new Message(
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
-                "1");
+                "1", MessageType.SessionReply);
             var handshake = new HandShakeResponse(topic);
             var postalAddress = new PostalAddress(
                 "TestingStreet",
@@ -544,11 +542,9 @@ namespace OpenVASP.Tests
                 },
                 "DEUTDEFF");
 
-            var request = new SessionReplyMessage(message, handshake, vaspInformation)
-            {
-                Comment = "This is test message",
-            };
-
+            var request = SessionReplyMessage.Create(message, handshake, vaspInformation);
+            request.Comment = "This is test message";
+            
             return request;
         }
 
@@ -560,7 +556,7 @@ namespace OpenVASP.Tests
             var message = new Message(
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
-                "1");
+                "1", MessageType.TransferRequest);
 
             var postalAddress = new PostalAddress(
                 "TestingStreet",
@@ -604,12 +600,11 @@ namespace OpenVASP.Tests
 
             var beneficiary = new Beneficiary("Ben1", "VaaN");
 
-            var transferRequest = new TransferRequest(VirtualAssetType.ETH, TransferType.BlockchainTransfer, "10000000");
+            var transferRequest = new TransferRequest(VirtualAssetType.ETH, TransferType.BlockchainTransfer, 10000000);
 
-            var request = new TransferRequestMessage(message, originator, beneficiary, transferRequest, vaspInformation)
-            {
-                Comment = "This is test message",
-            };
+            var request =
+                TransferRequestMessage.Create(message, originator, beneficiary, transferRequest, vaspInformation);
+            request.Comment = "This is test message";
 
             return request;
         }
@@ -622,7 +617,7 @@ namespace OpenVASP.Tests
             var message = new Message(
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
-                "1");
+                "1", MessageType.TransferReply);
 
             var postalAddress = new PostalAddress(
                 "TestingStreet",
@@ -666,12 +661,10 @@ namespace OpenVASP.Tests
 
             var beneficiary = new Beneficiary("Ben1", "VaaN");
 
-            var transferReply = new TransferReply(VirtualAssetType.ETH, TransferType.BlockchainTransfer, "10000000", "0x0000001");
+            var transferReply = new TransferReply(VirtualAssetType.ETH, TransferType.BlockchainTransfer, 10000000, "0x0000001");
 
-            var request = new TransferReplyMessage(message, originator, beneficiary, transferReply, vaspInformation)
-            {
-                Comment = "This is test message",
-            };
+            var request = TransferReplyMessage.Create(message, originator, beneficiary, transferReply, vaspInformation);
+            request.Comment = "This is test message";
 
             return request;
         }
@@ -684,7 +677,7 @@ namespace OpenVASP.Tests
             var message = new Message(
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
-                "1");
+                "1", MessageType.TransferDispatch);
 
             var postalAddress = new PostalAddress(
                 "TestingStreet",
@@ -728,13 +721,11 @@ namespace OpenVASP.Tests
 
             var beneficiary = new Beneficiary("Ben1", "VaaN");
 
-            var transferReply = new TransferReply(VirtualAssetType.ETH, TransferType.BlockchainTransfer, "10000000", "0x0000001");
+            var transferReply = new TransferReply(VirtualAssetType.ETH, TransferType.BlockchainTransfer, 10000000, "0x0000001");
             var transaction = new Transaction("txId", DateTime.UtcNow, "0x0000002");
 
-            var request = new TransferDispatchMessage(message, originator, beneficiary, transferReply, transaction, vaspInformation)
-            {
-                Comment = "This is test message",
-            };
+            var request = TransferDispatchMessage.Create(message, originator, beneficiary, transferReply, transaction, vaspInformation);
+            request.Comment = "This is test message";
 
             return request;
         }
@@ -747,7 +738,7 @@ namespace OpenVASP.Tests
             var message = new Message(
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
-                "1");
+                "1", MessageType.TransferConfirmation);
 
             var postalAddress = new PostalAddress(
                 "TestingStreet",
@@ -791,13 +782,11 @@ namespace OpenVASP.Tests
 
             var beneficiary = new Beneficiary("Ben1", "VaaN");
 
-            var transferReply = new TransferReply(VirtualAssetType.ETH, TransferType.BlockchainTransfer, "10000000", "0x0000001");
+            var transferReply = new TransferReply(VirtualAssetType.ETH, TransferType.BlockchainTransfer, 10000000, "0x0000001");
             var transaction = new Transaction("txId", DateTime.UtcNow, "0x0000002");
 
-            var request = new TransferConfirmationMessage(message, originator, beneficiary, transferReply, transaction, vaspInformation)
-            {
-                Comment = "This is test message",
-            };
+            var request = TransferConfirmationMessage.Create(message, originator, beneficiary, transferReply, transaction, vaspInformation);
+            request.Comment = "This is test message";
 
             return request;
         }
@@ -810,7 +799,7 @@ namespace OpenVASP.Tests
             var message = new Message(
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
                 Guid.NewGuid().ToByteArray().ToHex(prefix: false),
-                "1");
+                "1", MessageType.Termination);
             var postalAddress = new PostalAddress(
                 "TestingStreet",
                 61,
@@ -838,10 +827,8 @@ namespace OpenVASP.Tests
                 },
                 "DEUTDEFF");
 
-            var request = new TerminationMessage(message, vaspInformation)
-            {
-                Comment = "This is test message",
-            };
+            var request = TerminationMessage.Create(message, vaspInformation);
+            request.Comment = "This is test message";
             return request;
         }
     }

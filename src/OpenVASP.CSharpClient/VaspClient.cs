@@ -117,14 +117,8 @@ namespace OpenVASP.CSharpClient
                                     if (sessionRequestMessage == null)
                                         continue;
 
-                                    var isAuthorized =
-                                        await messageHandler.AuthorizeSessionRequestAsync(sessionRequestMessage.VASP);
-
-                                    if (!isAuthorized)
-                                        continue;
-
                                     var originatorVaspContractInfo =
-                                        await _ethereumRpc.GetVaspContractInfoAync(sessionRequestMessage.VASP
+                                        await _ethereumRpc.GetVaspContractInfoAync(sessionRequestMessage.Vasp
                                             .VaspIdentity);
 
                                     if (!_signService.VerifySign(message.Payload, message.Signature,
@@ -147,18 +141,12 @@ namespace OpenVASP.CSharpClient
                                         messageHandler,
                                         _transportClient,
                                         _signService);
+                                    
+                                    await messageHandler.AuthorizeSessionRequestAsync(sessionRequestMessage, session);
 
                                     this.NotifySessionCreated(session);
                                     session.OnSessionTermination += this.ProcessSessionTermination;
-                                    if (_beneficiarySessionsDict.TryAdd(session.SessionId, session))
-                                    {
-                                        await session.StartAsync();
-                                    }
-                                    else
-                                    {
-                                        await session.TerminateAsync(TerminationMessage.TerminationMessageCode
-                                            .SessionClosedTransferDeclinedByBeneficiaryVasp);
-                                    }
+                                    _beneficiarySessionsDict.TryAdd(session.SessionId, session);
                                 }
 
                                 continue;
@@ -197,7 +185,8 @@ namespace OpenVASP.CSharpClient
         /// <returns>OriginatorSession through which transfer request and transfer dispatch should be requested.</returns>
         public async Task<OriginatorSession> CreateSessionAsync(
             Originator originator,
-            VirtualAssetssAccountNumber beneficiaryVaan)
+            VirtualAssetsAccountNumber beneficiaryVaan,
+            IOriginatorVaspCallbacks _originatorVaspCallbacks)
         {
             string counterPartyVaspContractAddress = await _ensProvider.GetContractAddressByVaspCodeAsync(beneficiaryVaan.VaspCode);
             var contractInfo = await _ethereumRpc.GetVaspContractInfoAync(counterPartyVaspContractAddress);
@@ -216,7 +205,8 @@ namespace OpenVASP.CSharpClient
                 this._signatureKey,
                 _whisperRpc,
                 _transportClient,
-                _signService);
+                _signService,
+                _originatorVaspCallbacks);
 
             if (_originatorSessionsDict.TryAdd(session.SessionId, session))
             {

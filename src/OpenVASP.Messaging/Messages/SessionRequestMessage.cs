@@ -1,30 +1,37 @@
 ﻿using System;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Newtonsoft.Json;
 using OpenVASP.Messaging.Messages.Entities;
 
 namespace OpenVASP.Messaging.Messages
 {
     public class SessionRequestMessage : MessageBase
     {
-        public SessionRequestMessage(Message message, HandShakeRequest handshake, VaspInformation vasp)
+        public static SessionRequestMessage Create(Message message, HandShakeRequest handshake, VaspInformation vasp)
         {
-            MessageType = MessageType.SessionRequest;
-            Message = message;
-            HandShake = handshake;
-            VASP = vasp;
+            return new SessionRequestMessage
+            {
+                //MessageType = MessageType.SessionRequest,
+                Message = message,
+                HandShake = handshake,
+                Vasp = vasp
+            };
         }
 
-        public SessionRequestMessage(string sessionId, HandShakeRequest handshake, VaspInformation vasp)
+        public static SessionRequestMessage Create(string sessionId, HandShakeRequest handshake, VaspInformation vasp)
         {
-            MessageType = MessageType.SessionRequest;
-            Message = new Message(Guid.NewGuid().ToString(), sessionId, "1");
-            HandShake = handshake;
-            VASP = vasp;
+            return new SessionRequestMessage
+            {
+                Message = new Message(Guid.NewGuid().ToByteArray().ToHex(true), sessionId, "1", MessageType.SessionRequest),
+                HandShake = handshake,
+                Vasp = vasp
+            };
         }
 
+        [JsonProperty("handshake")]
         public HandShakeRequest HandShake { get; private set; }
 
-        public Message Message { get; private set; }
-
-        public VaspInformation VASP { get; private set; }
+        [JsonProperty("vasp")]
+        public VaspInformation Vasp { get; private set; }
     }
 }

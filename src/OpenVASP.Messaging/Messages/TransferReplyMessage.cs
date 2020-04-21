@@ -1,26 +1,31 @@
 ﻿using System;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Newtonsoft.Json;
 using OpenVASP.Messaging.Messages.Entities;
 
 namespace OpenVASP.Messaging.Messages
 {
     public class TransferReplyMessage : MessageBase
     {
-        public TransferReplyMessage(
+        public static TransferReplyMessage Create(
             Message message,
             Originator originator,
             Beneficiary beneficiary,
             TransferReply transfer,
             VaspInformation vasp)
         {
-            MessageType = MessageType.TransferReply;
-            Message = message;
-            Originator = originator;
-            Beneficiary = beneficiary;
-            Transfer = transfer;
-            VASP = vasp;
+            return new TransferReplyMessage
+            {
+                //MessageType = MessageType.TransferReply,
+                Message = message,
+                Originator = originator,
+                Beneficiary = beneficiary,
+                Transfer = transfer,
+                Vasp = vasp
+            };
         }
 
-        public TransferReplyMessage(
+        public static TransferReplyMessage Create(
             string sessionId,
             TransferReplyMessageCode transferReplyMessageCode,
             Originator originator,
@@ -28,23 +33,27 @@ namespace OpenVASP.Messaging.Messages
             TransferReply transfer,
             VaspInformation vasp)
         {
-            MessageType = MessageType.TransferReply;
-            Message = new Message(Guid.NewGuid().ToString(), sessionId, GetMessageCode(transferReplyMessageCode));
-            Originator = originator;
-            Beneficiary = beneficiary;
-            Transfer = transfer;
-            VASP = vasp;
+            return new TransferReplyMessage
+            {
+                Message = new Message(Guid.NewGuid().ToByteArray().ToHex(true), sessionId, GetMessageCode(transferReplyMessageCode), MessageType.TransferReply),
+                Originator = originator,
+                Beneficiary = beneficiary,
+                Transfer = transfer,
+                Vasp = vasp
+            };
         }
 
+        [JsonProperty("originator")]
         public Originator Originator { get; private set; }
 
+        [JsonProperty("beneficiary")]
         public Beneficiary Beneficiary { get; private set; }
 
+        [JsonProperty("transfer")]
         public TransferReply Transfer { get; private set; }
 
-        public Message Message { get; private set; }
-
-        public VaspInformation VASP { get; private set; }
+        [JsonProperty("vasp")]
+        public VaspInformation Vasp { get; private set; }
 
         public static string GetMessageCode(TransferReplyMessageCode messageCode)
         {
