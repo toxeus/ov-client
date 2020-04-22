@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>test</PackageId>
-    <Version>0.0.1-alpha.4</Version>
+    <Version>0.0.1-alpha.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenVASP.Messaging\OpenVASP.Messaging.csproj" />
+    <ProjectReference Include="..\OpenVASP.Messaging\OpenVASP.Messaging.csproj" PrivateAssets="All" />
   </ItemGroup>
+
+  <!--
+    The following solves the problem that 'dotnet pack' does not include the DLLs from referenced projects.
+    See https://github.com/NuGet/Home/issues/3891 for a description of the problem
+    and for newer versions / workarounds / built-in methods.
+  -->
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>
+      $(TargetsForTfmSpecificBuildOutput);PackReferencedProjectOutputs
+    </TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target Name="PackReferencedProjectOutputs" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
+  </Target>
 
 </Project>
