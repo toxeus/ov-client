@@ -6,14 +6,14 @@ namespace OpenVASP.Messaging.Messages.Entities
     /// <summary>
     /// VAAN
     /// </summary>
-    public class VirtualAssetssAccountNumber
+    public class VirtualAssetsAccountNumber
     {
-        private VirtualAssetssAccountNumber(VaspCode vaspCode, string customerSpecificNumberHex)
+        private VirtualAssetsAccountNumber(VaspCode vaspCode, string customerSpecificNumberHex)
         {
             VaspCode = vaspCode;
             CustomerNumber = customerSpecificNumberHex;
 
-            string vaan = vaspCode.Code + customerSpecificNumberHex;
+            var vaan = vaspCode.Code + customerSpecificNumberHex;
             var checksum = GetChecksum8Modulo256(vaan);
             var checkSumStr = (new byte[] { checksum }).ToHex(false);
 
@@ -26,10 +26,10 @@ namespace OpenVASP.Messaging.Messages.Entities
 
         public string Vaan { get; }
 
-        public static VirtualAssetssAccountNumber Create(string vaspCode, string customerSpecificNumberHex)
+        public static VirtualAssetsAccountNumber Create(string vaspCode, string customerSpecificNumberHex)
         {
             var vasp = VaspCode.Create(vaspCode);
-            var result = new VirtualAssetssAccountNumber(vasp, customerSpecificNumberHex);
+            var result = new VirtualAssetsAccountNumber(vasp, customerSpecificNumberHex);
 
             return result;
         }

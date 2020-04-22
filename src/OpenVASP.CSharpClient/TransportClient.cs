@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OpenVASP.CSharpClient.Interfaces;
@@ -27,7 +28,7 @@ namespace OpenVASP.CSharpClient
         {
             var payload = _messageFormatter.GetPayload(message);
             var sign = _signService.SignPayload(payload, messageEnvelope.SigningKey);
-
+            
             return await RetryPolicy.ExecuteAsync(async () =>
             {
                 return await _whisper.SendMessageAsync(

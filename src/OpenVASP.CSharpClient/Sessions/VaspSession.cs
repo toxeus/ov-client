@@ -124,13 +124,6 @@ namespace OpenVASP.Tests.Client.Sessions
             }
         }
 
-        public virtual Task StartAsync()
-        {
-            StartTopicMonitoring();
-
-            return Task.CompletedTask;
-        }
-
         public void Wait()
         {
             try
@@ -174,7 +167,7 @@ namespace OpenVASP.Tests.Client.Sessions
 
         protected virtual async Task TerminateStrategyAsync(TerminationMessage.TerminationMessageCode terminationMessageCode)
         {
-            var terminationMessage = new TerminationMessage(
+            var terminationMessage = TerminationMessage.Create(
                 this.SessionId,
                 terminationMessageCode,
                 _vaspInfo);

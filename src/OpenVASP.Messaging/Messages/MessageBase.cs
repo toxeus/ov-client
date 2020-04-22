@@ -1,9 +1,14 @@
-﻿namespace OpenVASP.Messaging.Messages
+﻿using Newtonsoft.Json;
+using OpenVASP.Messaging.Messages.Entities;
+
+namespace OpenVASP.Messaging.Messages
 {
-    public abstract class MessageBase
+    public class MessageBase
     {
-        public MessageType MessageType { get; protected set; }
+        [JsonProperty("msg")]
+        public Message Message { get; set; }
         
+        [JsonProperty("comment")]
         public string Comment { get; set; } = string.Empty;
     }
 }

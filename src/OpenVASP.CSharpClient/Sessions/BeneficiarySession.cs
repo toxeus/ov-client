@@ -42,29 +42,13 @@ namespace OpenVASP.CSharpClient.Sessions
             _messageHandlerResolverBuilder.AddHandler(typeof(TransferRequestMessage), new TransferRequestMessageHandler(
                 async (message, cancellationToken) =>
                 {
-                    var reply = await _vaspMessageHandler.TransferRequestHandlerAsync(message, this);
-
-                    await _transportClient.SendAsync(new MessageEnvelope()
-                    {
-                        Topic = this.CounterPartyTopic,
-                        SigningKey = _privateSigningKey,
-                        EncryptionType = EncryptionType.Symmetric,
-                        EncryptionKey = _sharedSymKeyId
-                    }, reply);
+                    await _vaspMessageHandler.TransferRequestHandlerAsync(message, this);
                 }));
 
             _messageHandlerResolverBuilder.AddHandler(typeof(TransferDispatchMessage), new TransferDispatchMessageHandler(
                 async (message, cancellationToken) =>
                 {
-                    var reply = await _vaspMessageHandler.TransferDispatchHandlerAsync(message, this);
-
-                    await _transportClient.SendAsync(new MessageEnvelope()
-                    {
-                        Topic = this.CounterPartyTopic,
-                        SigningKey = _privateSigningKey,
-                        EncryptionType = EncryptionType.Symmetric,
-                        EncryptionKey = _sharedSymKeyId
-                    }, reply);
+                    await _vaspMessageHandler.TransferDispatchHandlerAsync(message, this);
                 }));
 
             _messageHandlerResolverBuilder.AddHandler(typeof(TerminationMessage),
@@ -75,10 +59,32 @@ namespace OpenVASP.CSharpClient.Sessions
                 }));
         }
 
-        public override async Task StartAsync()
+        public async Task SendTransferReplyMessageAsync(TransferReplyMessage message)
         {
-            var reply = new SessionReplyMessage(this.SessionId, new HandShakeResponse(this.SessionTopic), this._vaspInfo);
-            this.CounterParty.VaspInfo = reply.VASP;
+            await _transportClient.SendAsync(new MessageEnvelope()
+            {
+                Topic = this.CounterPartyTopic,
+                SigningKey = _privateSigningKey,
+                EncryptionType = EncryptionType.Symmetric,
+                EncryptionKey = _sharedSymKeyId
+            }, message);
+        }
+
+        public async Task SendTransferConfirmationMessageAsync(TransferConfirmationMessage message)
+        {
+            await _transportClient.SendAsync(new MessageEnvelope()
+            {
+                Topic = this.CounterPartyTopic,
+                SigningKey = _privateSigningKey,
+                EncryptionType = EncryptionType.Symmetric,
+                EncryptionKey = _sharedSymKeyId
+            }, message);
+        }
+
+        public async Task StartAsync(SessionReplyMessage.SessionReplyMessageCode code)
+        {
+            var reply = SessionReplyMessage.Create(this.SessionId, code, new HandShakeResponse(this.SessionTopic), this._vaspInfo);
+            this.CounterParty.VaspInfo = reply.Vasp;
             _sharedSymKeyId = await _whisperRpc.RegisterSymKeyAsync(_sharedKey);
 
             await _transportClient.SendAsync(new MessageEnvelope()
@@ -89,7 +95,7 @@ namespace OpenVASP.CSharpClient.Sessions
                 SigningKey = this._privateSigningKey
             }, reply);
 
-            await base.StartAsync();
+            StartTopicMonitoring();
         }
     }
 }

@@ -1,30 +1,37 @@
 ﻿using System;
+using Nethereum.Hex.HexConvertors.Extensions;
+using Newtonsoft.Json;
 using OpenVASP.Messaging.Messages.Entities;
 
 namespace OpenVASP.Messaging.Messages
 {
     public class TerminationMessage : MessageBase
     {
-        public TerminationMessage(Message message, VaspInformation vasp)
+        public static TerminationMessage Create(Message message, VaspInformation vasp)
         {
-            MessageType = MessageType.Termination;
-            Message = message;
-            VASP = vasp;
+            return new TerminationMessage
+            {
+                //MessageType = MessageType.Termination,
+                Message = message,
+                Vasp = vasp,
+            };
         }
 
-        public TerminationMessage(string sessionId, TerminationMessageCode messageCode, VaspInformation vasp)
+        public static TerminationMessage Create(string sessionId, TerminationMessageCode messageCode, VaspInformation vasp)
         {
-            MessageType = MessageType.Termination;
-            Message = new Message(
-                Guid.NewGuid().ToString(),
-                sessionId,
-                GetMessageCode(messageCode));
-            VASP = vasp;
+            return new TerminationMessage
+            {
+                Message = new Message(
+                Guid.NewGuid().ToByteArray().ToHex(true),
+                    sessionId,
+                    GetMessageCode(messageCode),
+                    MessageType.Termination),
+                Vasp = vasp
+            };
         }
 
-        public Message Message { get; private set; }
-
-        public VaspInformation VASP { get; private set; }
+        [JsonProperty("vasp")]
+        public VaspInformation Vasp { get; private set; }
 
         public TerminationMessageCode GetMessageCode()
         {
