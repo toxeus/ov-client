@@ -2,6 +2,8 @@ name: Publish On NuGet
 
 on:
   push:
+    branches:
+      - master
     tags: "*"
 
 jobs:
