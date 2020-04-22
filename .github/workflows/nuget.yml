@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - master
-    tags: "*"
+    tags:
+      - '*' # Push version tags matching to *, i.e. v1.0.0, 20.15.10 
 
 jobs:
   publish:
