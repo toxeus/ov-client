@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Signer;
@@ -94,8 +95,8 @@ namespace OpenVASP.Tests
             ECDH_Key alice = ECDH_Key.ImportKey(ecKey1.GetPrivateKey());
             ECDH_Key bob = ECDH_Key.ImportKey(ecKey2.GetPrivateKey());
 
-            var ecPubKey1 = ecKey1.GetPubKey().ToHex().Substring(2);
-            var ecPubKey2 = ecKey2.GetPubKey().ToHex().Substring(2);
+            var ecPubKey1 = $"0x{ecKey1.GetPubKey().ToHex().Substring(2)}";
+            var ecPubKey2 = $"0x{ecKey2.GetPubKey().ToHex().Substring(2)}";
 
             Assert.Equal(ecPubKey1, alice.PublicKey);
             Assert.Equal(ecPubKey2, bob.PublicKey);
@@ -111,7 +112,7 @@ namespace OpenVASP.Tests
 
         [Theory]
         [InlineData("0x3a854321be6027990865a00269c275cb100b79583cb8c44739894dea04062796",
-            "498ac9f68e156109de2b3da58ded53d60dfa0e606c87460417bff541e300bf8c3a6a2519458c6d3ef7dae2725b7677744c7b07308239c9bba5288f778dcec788",
+            "0x498ac9f68e156109de2b3da58ded53d60dfa0e606c87460417bff541e300bf8c3a6a2519458c6d3ef7dae2725b7677744c7b07308239c9bba5288f778dcec788",
             "0x46bdbcc3218d12563e3ea67aca132eab9b34880fd8e3ae65a951572a0b388859")]
         public void ValidateEcdhKeysSharedKeyGenerationForPubKeyTest(string privateKeySecp256k1, string publicKeySecp256k1, string sharedKey)
         {
@@ -155,7 +156,7 @@ namespace OpenVASP.Tests
             testOutputHelper.WriteLine(res);
 
             EthECKey aliceKeyEth = new EthECKey(aliceConverted);
-            EthECKey bobKeyEth = new EthECKey(bob.PublicKey.ToStandardHex().HexToByteArray(), false);
+            EthECKey bobKeyEth = new EthECKey($"0x04{bob.PublicKey.Substring(2)}".HexToByteArray(), false);
 
             var shared3 = aliceKeyEth.CalculateCommonSecret(bobKeyEth).ToHex(true);
             testOutputHelper.WriteLine(shared3);
