@@ -39,7 +39,16 @@ namespace OpenVASP.CSharpClient.Cryptography
 
         public string GenerateSharedSecretHex(string pubKeyHex)
         {
-            var pubKeyBytes = pubKeyHex.ToStandardHex().HexToByteArray();
+            var pubKeyBytes = pubKeyHex.HexToByteArray();
+
+            if (pubKeyBytes.Length == 64)
+            {
+                byte[] newValues = new byte[pubKeyBytes.Length + 1];
+                newValues[0] = 0x04;
+                Array.Copy(pubKeyBytes, 0, newValues, 1, pubKeyBytes.Length);
+                pubKeyBytes = newValues;
+            }
+            
             var q = _curve.Curve.DecodePoint(pubKeyBytes);
             var remotePublicKey = new ECPublicKeyParameters("ECDH", q, _domain);
             var agreement = new ECDHBasicAgreement();
@@ -77,7 +86,7 @@ namespace OpenVASP.CSharpClient.Cryptography
         {
             if (keyPair.Public is ECPublicKeyParameters dhPublicKeyParameters)
             {
-                return dhPublicKeyParameters.Q.GetEncoded().ToHex(true).ToOpenVaspHex();
+                return $"0x{dhPublicKeyParameters.Q.GetEncoded().ToHex(false).Substring(2)}";
             }
             throw new NullReferenceException("The key pair provided is not a valid ECDH keypair.");
         }
