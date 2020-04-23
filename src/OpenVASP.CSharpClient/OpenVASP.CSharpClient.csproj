@@ -10,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="VASP.abi">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Content Include="VASP.abi">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
