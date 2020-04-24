@@ -24,4 +24,4 @@ jobs:
         run: dotnet pack --configuration Release src/OpenVASP.CSharpClient/OpenVASP.CSharpClient.csproj /p:Version=${GITHUB_REF#refs/tags/}
       
       - name: Publish the package to GPR
-        run: dotnet nuget push src/OpenVASP.CSharpClient/bin/Release/*.nupkg ${{ secrets.MYGET_API_KEY }} -s https://www.myget.org/F/openvasp/api/v2/package
+        run: dotnet nuget push src/OpenVASP.CSharpClient/bin/Release/*.nupkg -k ${{ secrets.MYGET_API_KEY }} -s https://www.myget.org/F/openvasp/api/v2/package
