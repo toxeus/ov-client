@@ -245,11 +245,11 @@ namespace OpenVASP.CSharpClient
                 session.OnSessionTermination += this.ProcessSessionTermination;
                 await session.StartAsync();
             }
-
-            await session.TerminateAsync(TerminationMessage.TerminationMessageCode
-                .SessionClosedTransferCancelledByOriginator);
-
-            _originatorSessionsDict[session.SessionId] = session;
+            else
+            {
+                await session.TerminateAsync(TerminationMessage.TerminationMessageCode
+                    .SessionClosedTransferCancelledByOriginator);
+            }
 
             return session.SessionId;
         }
