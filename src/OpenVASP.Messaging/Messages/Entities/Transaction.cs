@@ -16,6 +16,7 @@ namespace OpenVASP.Messaging.Messages.Entities
         public string TransactionId { get; private set; }
 
         [JsonProperty("datetime")]
+        [JsonConverter(typeof(DateFormatConverter), "YYYY-MM-DDThh:mm:ssZ")]
         public DateTime DateTime { get; private set; }
 
         [JsonProperty("sendingadr")]
