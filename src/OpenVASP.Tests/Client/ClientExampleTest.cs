@@ -25,8 +25,6 @@ namespace OpenVASP.Tests.Client
         private readonly WhisperSignService _signService;
         private readonly WhisperRpc _whisperRpc;
 
-        public INodeClient NodeClient { get; set; }
-
         public VaspTestSettings Settings { get; set; }
 
         public ClientExampleTest(ITestOutputHelper testOutputHelper)
@@ -41,13 +39,7 @@ namespace OpenVASP.Tests.Client
             this._whisperRpc = new WhisperRpc(new Web3(whisperRpcUrl), new WhisperMessageFormatter());
 
             var ethRpc = new EthereumRpc(new Web3(ethereumRpcUrl));
-            
-            NodeClient = new NodeClient()
-            {
-                EthereumRpc = ethRpc,
-                WhisperRpc =_whisperRpc,
-                TransportClient = new TransportClient(_whisperRpc, _signService, new WhisperMessageFormatter())
-            };
+
             Settings = new VaspTestSettings()
             {
                 PersonHandshakePrivateKeyHex =    "0xe7578145d518e5272d660ccfdeceedf2d55b90867f2b7a6e54dc726662aebac2",
