@@ -1,18 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenVASP.Messaging;
 using OpenVASP.Messaging.Messages;
 
+[assembly: InternalsVisibleTo("OpenVASP.Tests")]
+
 namespace OpenVASP.CSharpClient.Sessions
 {
-    public class ProducerConsumerQueue : IDisposable
+    internal class ProducerConsumerQueue : IDisposable
     {
         private readonly MessageHandlerResolver _messageHandlerResolver;
-        private readonly Queue<MessageBase> _bufferQueue = new Queue<MessageBase>();
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private readonly ConcurrentQueue<MessageBase> _bufferQueue = new ConcurrentQueue<MessageBase>();
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly AutoResetEvent _manual = new AutoResetEvent(false);
 
@@ -26,15 +28,11 @@ namespace OpenVASP.CSharpClient.Sessions
             StartWorker();
         }
 
-        public async Task EnqueueAsync(MessageBase message)
+        public void Enqueue(MessageBase message)
         {
-            await _semaphore.WaitAsync();
-
             _bufferQueue.Enqueue(message);
 
             _manual.Set();
-
-            _semaphore.Release();
         }
 
         private void StartWorker()
@@ -51,8 +49,9 @@ namespace OpenVASP.CSharpClient.Sessions
                     {
                         try
                         {
-                            await _semaphore.WaitAsync(cancellationToken);
-                            var item = _bufferQueue.Dequeue();
+                            if (!_bufferQueue.TryDequeue(out var item))
+                                continue;
+
                             var handlers = _messageHandlerResolver.ResolveMessageHandlers(item.GetType());
 
                             foreach (var handler in handlers)
@@ -65,10 +64,6 @@ namespace OpenVASP.CSharpClient.Sessions
                             //TODO: Add logging here
                             throw;
                         }
-                        finally
-                        {
-                            _semaphore.Release();
-                        }
                     }
 
                 } while (!cancellationToken.IsCancellationRequested);
@@ -78,8 +73,8 @@ namespace OpenVASP.CSharpClient.Sessions
 
         public void Dispose()
         {
-            _cancellationTokenSource.Cancel();
             _manual.Set();
+            _cancellationTokenSource.Cancel();
 
             try
             {
@@ -87,11 +82,10 @@ namespace OpenVASP.CSharpClient.Sessions
             }
             catch (Exception e)
             {
-                //TODO: process exception
+                //TODO: log exception
                 // ignored
             }
 
-            _semaphore?.Dispose();
             _manual?.Dispose();
             _queueWorker?.Dispose();
         }
