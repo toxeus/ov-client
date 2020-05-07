@@ -210,7 +210,7 @@ namespace OpenVASP.Tests.Client
             await originator.CreateSessionAsync(originatorDoc, beneficiaryVaan);
 
             await Task.WhenAny(
-                Task.Delay(TimeSpan.FromMinutes(1)),
+                Task.Delay(TimeSpan.FromMinutes(2)),
                 Task.WhenAll(
                     sessionRequestSemaphore.WaitAsync(),
                     sessionReplySemaphore.WaitAsync(),
