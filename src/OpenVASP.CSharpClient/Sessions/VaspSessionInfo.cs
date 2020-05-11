@@ -8,6 +8,8 @@ namespace OpenVASP.CSharpClient.Sessions
         public string CounterPartyPublicSigningKey { set; get; }
         public string Topic { get; set; }
         public string CounterPartyTopic { get; set; }
+        public string MessageFilter { get; set; }
+        public string SymKey { get; set; }
         public abstract SessionType Type { get; }
     }
 

@@ -190,7 +190,11 @@ namespace OpenVASP.Tests.Client
             var sessionInfo = await originatorClient.CreateOriginatorSessionAsync(beneficiaryVaan.VaspCode);
 
             await originatorClient.SessionRequestAsync(sessionInfo.Id);
-
+            
+            await originatorClient.CloseSessionAsync(sessionInfo.Id);
+            
+            await originatorClient.CreateOriginatorSessionAsync(beneficiaryVaan.VaspCode, sessionInfo);
+            
             await Task.WhenAny(
                 Task.Delay(TimeSpan.FromMinutes(2)),
                 Task.WhenAll(

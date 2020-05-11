@@ -140,11 +140,24 @@ namespace OpenVASP.CSharpClient
         {
             _beneficiarySessionsDict.TryAdd(session.Info.Id, session);
             
-            await session.OpenChannelAsync();
+            session.OpenChannel();
             
             await NotifyBeneficiarySessionCreatedAsync(session);
 
             await _beneficiaryVaspCallbacks.SessionRequestHandlerAsync(sessionRequestMessage, session);
+        }
+
+        public async Task CloseSessionAsync(string sessionId)
+        {
+            var session = (VaspSession) _originatorSessionsDict[sessionId] ?? _beneficiarySessionsDict[sessionId];
+            
+            if(session == null)
+                throw new ArgumentException($"Session with id {sessionId} not found");
+
+            _originatorSessionsDict.TryRemove(sessionId, out _);
+            _beneficiarySessionsDict.TryRemove(sessionId, out _);
+
+            await session.CloseChannelAsync();
         }
 
         public async Task<BeneficiarySessionInfo> CreateBeneficiarySessionAsync(BeneficiarySessionInfo sessionInfo)
@@ -157,7 +170,7 @@ namespace OpenVASP.CSharpClient
             
             _beneficiarySessionsDict.TryAdd(session.Info.Id, session);
             
-            await session.OpenChannelAsync();
+            session.OpenChannel();
 
             return sessionInfo;
         }
@@ -170,6 +183,11 @@ namespace OpenVASP.CSharpClient
                 var contractInfo = await _ethereumRpc.GetVaspContractInfoAync(counterPartyVaspContractAddress);
                 var sessionKey = ECDH_Key.GenerateKey();
                 var sharedKey = sessionKey.GenerateSharedSecretHex(contractInfo.HandshakeKey);
+                var topic = TopicGenerator.GenerateSessionTopic();
+                var symKey = await _transportClient.RegisterSymKeyAsync(sharedKey);
+                var messageFilter = await _transportClient.CreateMessageFilterAsync(
+                    topic,
+                    symKeyId: symKey);
                 
                 sessionInfo = new OriginatorSessionInfo
                 {
@@ -177,9 +195,11 @@ namespace OpenVASP.CSharpClient
                     PrivateSigningKey = _signatureKey,
                     SharedEncryptionKey = sharedKey,
                     CounterPartyPublicSigningKey = contractInfo.SigningKey,
-                    Topic = TopicGenerator.GenerateSessionTopic(),
+                    Topic = topic,
                     PublicHandshakeKey = contractInfo.HandshakeKey,
-                    PublicEncryptionKey =  sessionKey.PublicKey
+                    PublicEncryptionKey =  sessionKey.PublicKey,
+                    MessageFilter = messageFilter,
+                    SymKey = symKey
                 };
             }
             
@@ -190,7 +210,7 @@ namespace OpenVASP.CSharpClient
                 _signService,
                 _originatorVaspCallbacks);
 
-            await session.OpenChannelAsync();
+            session.OpenChannel();
 
             _originatorSessionsDict.TryAdd(session.Info.Id, session);
 
@@ -305,7 +325,17 @@ namespace OpenVASP.CSharpClient
 
         public void Dispose()
         {
-            _sessionsRequestsListener.Stop();
+            _sessionsRequestsListener.Dispose();
+
+            foreach (var session in _originatorSessionsDict.Values)
+            {
+                session.Dispose();
+            }
+            
+            foreach (var session in _beneficiarySessionsDict.Values)
+            {
+                session.Dispose();
+            }
         }
 
         private async Task NotifyBeneficiarySessionCreatedAsync(BeneficiarySession session)

@@ -37,13 +37,6 @@ namespace OpenVASP.CSharpClient.Sessions
                 .AddHandler<TransferConfirmationMessage>(ProcessTransferConfirmationMessageAsync);
         }
 
-        public async Task OpenChannelAsync()
-        {
-            _sharedSymKeyId = await RegisterSymKeyAsync();
-
-            StartTopicMonitoring();
-        }
-
         public async Task SessionRequestAsync(VaspInformation vaspInfo)
         {
             var sessionRequestMessage = SessionRequestMessage.Create(
@@ -94,7 +87,7 @@ namespace OpenVASP.CSharpClient.Sessions
                 Topic = Info.CounterPartyTopic,
                 SigningKey = Info.PrivateSigningKey,
                 EncryptionType = EncryptionType.Symmetric,
-                EncryptionKey = _sharedSymKeyId
+                EncryptionKey = Info.SymKey
             }, terminationMessage);
         }
 
@@ -107,7 +100,7 @@ namespace OpenVASP.CSharpClient.Sessions
                 Topic = Info.CounterPartyTopic,
                 SigningKey = Info.PrivateSigningKey,
                 EncryptionType = EncryptionType.Symmetric,
-                EncryptionKey = _sharedSymKeyId
+                EncryptionKey = Info.SymKey
             };
 
             return _originatorVaspCallbacks.SessionReplyMessageHandlerAsync(message, this);

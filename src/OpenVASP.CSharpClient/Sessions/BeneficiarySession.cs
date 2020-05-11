@@ -33,18 +33,11 @@ namespace OpenVASP.CSharpClient.Sessions
                 .AddHandler<TerminationMessage>(ProcessTerminationMessageAsync);
         }
 
-        public async Task OpenChannelAsync()
-        {
-            _sharedSymKeyId = await RegisterSymKeyAsync();
-
-            StartTopicMonitoring();
-        }
-
         public async Task SessionReplyAsync(VaspInformation vaspInfo, SessionReplyMessage.SessionReplyMessageCode? code)
         {
             _messageEnvelope = new MessageEnvelope
             {
-                EncryptionKey = _sharedSymKeyId,
+                EncryptionKey = Info.SymKey,
                 EncryptionType = EncryptionType.Symmetric,
                 Topic = Info.CounterPartyTopic,
                 SigningKey = Info.PrivateSigningKey

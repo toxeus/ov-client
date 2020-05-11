@@ -16,8 +16,9 @@ namespace OpenVASP.CSharpClient
     /// </summary>
     internal class SessionsRequestsListener : IDisposable
     {
-        private bool _hasStartedListening;
-        private Task _listener;
+        private bool _isListening;
+        private Task _task;
+        private CancellationTokenSource _cancellationTokenSource;
 
         private readonly ECDH_Key _handshakeKey;
         private readonly string _signatureKey;
@@ -25,7 +26,6 @@ namespace OpenVASP.CSharpClient
         private readonly IEthereumRpc _ethereumRpc;
         private readonly ITransportClient _transportClient;
         private readonly ISignService _signService;
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly object _lock = new object();
 
         /// <summary>
@@ -58,13 +58,14 @@ namespace OpenVASP.CSharpClient
         {
             lock (_lock)
             {
-                if (!_hasStartedListening)
+                if (!_isListening)
                 {
-                    _hasStartedListening = true;
+                    _isListening = true;
+                    _cancellationTokenSource = new CancellationTokenSource();
                     var token = _cancellationTokenSource.Token;
                     var taskFactory = new TaskFactory(_cancellationTokenSource.Token);
 
-                    _listener = taskFactory.StartNew(async _ =>
+                    _task = taskFactory.StartNew(async _ =>
                     {
                         var privateKeyId = await _transportClient.RegisterKeyPairAsync(_handshakeKey.PrivateKey);
                         var messageFilter = await _transportClient.CreateMessageFilterAsync(_vaspCode.Code, privateKeyId);
@@ -93,15 +94,22 @@ namespace OpenVASP.CSharpClient
                                     continue;
 
                                 var sharedSecret = _handshakeKey.GenerateSharedSecretHex(sessionRequestMessage.HandShake.EcdhPubKey);
-
+                                var symKey = await _transportClient.RegisterSymKeyAsync(sharedSecret);
+                                var topic = TopicGenerator.GenerateSessionTopic();
+                                var filter = await _transportClient.CreateMessageFilterAsync(
+                                    topic,
+                                    symKeyId: symKey);
+                                
                                 var sessionInfo = new BeneficiarySessionInfo
                                 {
                                     Id = sessionRequestMessage.Message.SessionId,
                                     PrivateSigningKey = _signatureKey,
                                     SharedEncryptionKey = sharedSecret,
                                     CounterPartyPublicSigningKey = originatorVaspContractInfo.SigningKey,
-                                    Topic = TopicGenerator.GenerateSessionTopic(),
-                                    CounterPartyTopic = sessionRequestMessage.HandShake.TopicA
+                                    Topic = topic,
+                                    CounterPartyTopic = sessionRequestMessage.HandShake.TopicA,
+                                    MessageFilter = filter,
+                                    SymKey = symKey
                                 };
                                 
                                 var session = new BeneficiarySession(
@@ -131,17 +139,28 @@ namespace OpenVASP.CSharpClient
         /// <summary>
         /// Stops listener for incoming session request messages
         /// </summary>
-        public void Stop()
+        public async Task StopAsync()
         {
-            _cancellationTokenSource.Cancel();
+            try
+            {
+                Dispose();
+                
+                await _task;
+
+                _isListening = false;
+            }
+            catch (Exception e)
+            {
+                //todo: handle
+            }
         }
 
         public void Dispose()
         {
-            Stop();
-
-            _listener?.Dispose();
-            _listener = null;
+            _cancellationTokenSource?.Cancel();
+            
+            _task?.Dispose();
+            _task = null;
         }
     }
 }

@@ -16,18 +16,16 @@ namespace OpenVASP.CSharpClient.Sessions
     internal abstract class VaspSession : IDisposable
     {
         private readonly object _lock = new object();
-        private readonly CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource;
         private readonly ISignService _signService;
 
-        private bool _isActivated;
+        private bool _isListening;
         private bool _hasReceivedTerminationMessage;
         private ProducerConsumerQueue _producerConsumerQueue;
         private Task _task;
 
         protected readonly MessageHandlerResolverBuilder _messageHandlerResolverBuilder;
         protected readonly ITransportClient _transportClient;
-
-        protected string _sharedSymKeyId;
         
         public VaspSessionInfo Info { get; }
 
@@ -37,32 +35,32 @@ namespace OpenVASP.CSharpClient.Sessions
             ISignService signService)
         {
             Info = vaspSessionInfo;
-            _cancellationTokenSource = new CancellationTokenSource();
             _messageHandlerResolverBuilder = new MessageHandlerResolverBuilder();
             _transportClient = transportClient;
             _signService = signService;
         }
-
-        protected void StartTopicMonitoring()
+        
+        public void OpenChannel()
         {
             lock (_lock)
             {
-                if (_isActivated)
+                if (_isListening)
                     throw new InvalidOperationException("Session was already started");
+                
+                _cancellationTokenSource = new CancellationTokenSource();
 
                 var taskFactory = new TaskFactory(_cancellationTokenSource.Token);
                 var cancellationToken = _cancellationTokenSource.Token;
 
                 _task = taskFactory.StartNew(async _ =>
                 {
-                    var messageFilter = await _transportClient.CreateMessageFilterAsync(Info.Topic, symKeyId: _sharedSymKeyId);
                     _messageHandlerResolverBuilder.AddDefaultHandler(ProcessUnexpectedMessageAsync);
                     var messageHandlerResolver = _messageHandlerResolverBuilder.Build();
                     _producerConsumerQueue = new ProducerConsumerQueue(messageHandlerResolver, cancellationToken);
 
                     do
                     {
-                        var messages = await _transportClient.GetSessionMessagesAsync(messageFilter);
+                        var messages = await _transportClient.GetSessionMessagesAsync(Info.MessageFilter);
 
                         if (messages == null || messages.Count == 0)
                         {
@@ -86,19 +84,23 @@ namespace OpenVASP.CSharpClient.Sessions
                     } while (!cancellationToken.IsCancellationRequested);
                 }, cancellationToken, TaskCreationOptions.LongRunning);
 
-                _isActivated = true;
+                _isListening = true;
             }
         }
 
-        public async Task WaitAsync()
+        public async Task CloseChannelAsync()
         {
             try
             {
+                Dispose();
+
                 await _task;
+
+                _isListening = false;
             }
             catch (Exception e)
             {
-                // TODO log this
+                //todo: handle
             }
         }
 
@@ -109,11 +111,6 @@ namespace OpenVASP.CSharpClient.Sessions
             _task?.Dispose();
             _producerConsumerQueue?.Dispose();
             _cancellationTokenSource?.Dispose();
-        }
-
-        protected Task<string> RegisterSymKeyAsync()
-        {
-            return _transportClient.RegisterSymKeyAsync(Info.SharedEncryptionKey);
         }
 
         private Task ProcessUnexpectedMessageAsync(MessageBase message, CancellationToken token)
