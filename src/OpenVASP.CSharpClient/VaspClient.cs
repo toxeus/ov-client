@@ -147,7 +147,22 @@ namespace OpenVASP.CSharpClient
             await _beneficiaryVaspCallbacks.SessionRequestHandlerAsync(sessionRequestMessage, session);
         }
 
-        public async Task<VaspSessionInfo> CreateSessionAsync(VaspCode vaspCode, OriginatorSessionInfo sessionInfo = null)
+        public async Task<VaspSessionInfo> CreateBeneficiarySessionAsync(BeneficiarySessionInfo sessionInfo)
+        {
+            var session = new BeneficiarySession(
+                sessionInfo,
+                _beneficiaryVaspCallbacks,
+                _transportClient,
+                _signService);
+            
+            _beneficiarySessionsDict.TryAdd(session.Info.Id, session);
+            
+            await session.OpenChannelAsync();
+
+            return sessionInfo;
+        }
+
+        public async Task<VaspSessionInfo> CreateOriginatorSessionAsync(VaspCode vaspCode, OriginatorSessionInfo sessionInfo = null)
         {
             if (sessionInfo == null)
             {

@@ -187,7 +187,7 @@ namespace OpenVASP.Tests.Client
                 return Task.CompletedTask;
             };
 
-            var sessionInfo = await originatorClient.CreateSessionAsync(beneficiaryVaan.VaspCode);
+            var sessionInfo = await originatorClient.CreateOriginatorSessionAsync(beneficiaryVaan.VaspCode);
 
             await originatorClient.SessionRequestAsync(sessionInfo.Id);
 
